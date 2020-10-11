@@ -87,7 +87,6 @@ fun fib(n: Int): Int =
     else fib(n - 2) + fib(n - 1)
 
 
-
 /**
  * Простая (2 балла)
  *
