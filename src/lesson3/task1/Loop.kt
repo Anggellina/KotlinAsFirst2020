@@ -73,7 +73,17 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int =
+    if (n == 0) 1
+    else {
+        var number = abs(n)
+        var result = 0
+        while (number > 0) {
+            number /= 10
+            result += 1
+        }
+        result
+    }
 
 
 /**
@@ -94,10 +104,10 @@ fun fib(n: Int): Int =
  */
 fun minDivisor(n: Int): Int {
     var z = 2
-    while (n % z != 0){
-    z += 1
+    while (n % z != 0) {
+        z += 1
 }
-   return z
+    return z
 }
 
 
@@ -111,8 +121,8 @@ fun maxDivisor(n: Int): Int {
     while (n % z != 0){
         z -= 1
     }
-        return z
-    }
+    return z
+}
 
 /**
  * Простая (2 балла)
@@ -138,7 +148,17 @@ fun collatzSteps(x: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+fun lcm(m: Int, n: Int): Int {
+    var num_m = m
+    var num_n = n
+    val multiplication = (num_m * num_n)
+    while ((num_m != 0) && (num_n != 0)) {
+        if (num_m > num_n) num_m %= num_n
+        else num_n %= num_m
+    }
+    val count = num_m + num_n
+    return multiplication / count
+}
 
 /**
  * Средняя (3 балла)
@@ -165,7 +185,15 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var m = 0
+    var num = n
+    do {
+        m = (m * 10 + (num % 10))
+        num /= 10
+    } while (num > 0)
+    return m
+}
 
 /**
  * Средняя (3 балла)
