@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import kotlin.math.abs
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -92,9 +93,15 @@ fun digitNumber(n: Int): Int =
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int =
-    if (n <= 2) 1
-    else fib(n - 2) + fib(n - 1)
+fun fib(n: Int): Int {
+    var a = 1
+    var b = 1
+    for (i in 2 until n) {
+        b += a
+        a = b - a
+    }
+    return b
+}
 
 
 /**
@@ -106,7 +113,7 @@ fun minDivisor(n: Int): Int {
     var z = 2
     while (n % z != 0) {
         z += 1
-}
+    }
     return z
 }
 
@@ -118,7 +125,7 @@ fun minDivisor(n: Int): Int {
  */
 fun maxDivisor(n: Int): Int {
     var z = n - 1
-    while (n % z != 0){
+    while (n % z != 0) {
         z -= 1
     }
     return z
