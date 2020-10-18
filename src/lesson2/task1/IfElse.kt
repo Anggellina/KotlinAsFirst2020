@@ -72,7 +72,7 @@ fun ageDescription(age: Int): String =
     when {
         age % 100 in 12..15 -> "$age лет"
         age % 10 == 1 -> "$age год"
-        age % 10 in 3..5 -> "$age года"
+        age % 10 in 2..4 -> "$age года"
         else -> "$age лет"
     }
 
@@ -87,7 +87,7 @@ fun timeForHalfWay(t1: Double, v1: Double, t2: Double, v2: Double, t3: Double, v
     val h = (v1 * t1 + v2 * t2 + v3 * t3) / 2
     return when {
         h <= v1 * t1 -> h / v1
-        (h > v1 * t1) and (h <= v1 * t1 + v2 * t2) -> t1 + ((h - v1 * t1) / v2)
+        (h <= v1 * t1 + v2 * t2) -> t1 + ((h - v1 * t1) / v2)
         else -> t1 + t2 + ((h - v1 * t1 - v2 * t2) / v3)
     }
 }
@@ -103,10 +103,12 @@ fun timeForHalfWay(t1: Double, v1: Double, t2: Double, v2: Double, t3: Double, v
  */
 
 fun whichRookThreatens(kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2: Int, rookY2: Int): Int =
-    if (((kingX != rookX1) && (kingY != rookY1)) && ((kingX != rookX2) && (kingY != rookY2))) 0
-    else if (((kingX == rookX1) || (kingY == rookY1)) && ((kingX != rookX2) && (kingY != rookY2))) 1
-    else if (((kingX != rookX1) && (kingY != rookY1)) && ((kingX == rookX2) || (kingY == rookY2))) 2
-    else 3
+    when {
+        (((kingX != rookX1) && (kingY != rookY1)) && ((kingX != rookX2) && (kingY != rookY2))) -> 0
+        (((kingX == rookX1) || (kingY == rookY1)) && ((kingX != rookX2) && (kingY != rookY2))) -> 1
+        (((kingX != rookX1) && (kingY != rookY1)) && ((kingX == rookX2) || (kingY == rookY2))) -> 2
+        else -> 3
+    }
 
 
 /**
@@ -120,10 +122,12 @@ fun whichRookThreatens(kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2:
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int): Int =
-    if (((kingX != rookX) && (kingY != bishopX)) && ((kingX != rookX) && (kingY != bishopY))) 0
-    else if (((kingX == rookX) || (kingY == bishopX)) && ((kingX != rookX) && (kingY != bishopY))) 1
-    else if (((kingX != rookX) && (kingY != bishopX)) && ((kingX == rookX) || (kingY == bishopY))) 2
-    else 3
+    when {
+        (((kingX != rookX) && (kingY != bishopX)) && ((kingX != rookX) && (kingY != bishopY))) -> 0
+        (((kingX == rookX) || (kingY == bishopX)) && ((kingX != rookX) && (kingY != bishopY))) -> 1
+        (((kingX != rookX) && (kingY != bishopX)) && ((kingX == rookX) || (kingY == bishopY))) -> 2
+        else -> 3
+    }
 
 /**
  * Простая (2 балла)
@@ -143,11 +147,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Double = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
-    if (c > b || a > d) -1
-    else if (b == c || d == a) 0
-    else if (c < a && d < b) d - a
-    else if (a < c && b < d) b - c
-    else if (c <= a && b <= d) b - a
-    else if (a <= c && d <= b) d - c
-    else -2
+fun segmentLength(a: Int, b: Int, c: Int, d: Int) =
+    when {
+        (c > b || a > d) -> -1
+        (b == c || d == a) -> 0
+        (c < a && d < b) -> d - a
+        (a < c && b < d) -> b - c
+        (c <= a && b <= d) -> b - a
+        (a <= c && d <= b) -> d - c
+        else -> -2
+    }
