@@ -3,7 +3,6 @@
 package lesson3.task1
 
 import kotlin.math.abs
-import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -18,7 +17,7 @@ import kotlin.math.sqrt
  */
 fun factorial(n: Int): Double {
     var result = 1.0
-    for (i in 1..n) {
+    for (i in 1..n.toInt()) {
         result *= i // Please do not fix in master
     }
     return result
@@ -147,7 +146,24 @@ fun maxDivisor(n: Int): Int {
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var n = x
+    var z = 0
+    if (x == 1) return z
+
+    while (n != 1) {
+        if (n == 10) return (z + 6)
+        if (n % 2 == 0) {
+            z++
+            n /= 2
+        } else {
+            z++
+            n += n + n + 1
+        }
+    }
+    return z
+}
+
 
 /**
  * Средняя (3 балла)
@@ -234,6 +250,7 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  */
 fun sin(x: Double, eps: Double): Double = TODO()
 
+
 /**
  * Средняя (4 балла)
  *
@@ -254,7 +271,33 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var enumerator = 0
+    var num = 0
+    var square = 0
+    var z = 1
+    var t = 10
+    while (enumerator < n) {
+        num++
+        square = num * num
+        z = 1
+        t = 10
+        while (square / t != 0) {
+            t *= 10
+            z++
+        }
+        enumerator += z
+    }
+    enumerator -= z
+    t /= 10
+    var result = 1
+    while (enumerator != n) {
+        result = square / t % 10
+        t /= 10
+        enumerator++
+    }
+    return result
+}
 
 /**
  * Сложная (5 баллов)
