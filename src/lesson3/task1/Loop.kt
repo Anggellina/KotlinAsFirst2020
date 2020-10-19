@@ -149,16 +149,14 @@ fun maxDivisor(n: Int): Int {
 fun collatzSteps(x: Int): Int {
     var n = x
     var z = 0
-    if (x == 1) return z
 
     while (n != 1) {
-        if (n == 10) return (z + 6)
         if (n % 2 == 0) {
             z++
             n /= 2
         } else {
             z++
-            n += n + n + 1
+            n = n + n + n + 1
         }
     }
     return z
@@ -172,14 +170,14 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var num_m = m
-    var num_n = n
-    val multiplication = (num_m * num_n)
-    while ((num_m != 0) && (num_n != 0)) {
-        if (num_m > num_n) num_m %= num_n
-        else num_n %= num_m
+    var first = m
+    var second = n
+    val multiplication = (first * second)
+    while ((first != 0) && (second != 0)) {
+        if (first > second) first %= second
+        else second %= first
     }
-    val count = num_m + num_n
+    val count = first + second
     return multiplication / count
 }
 
@@ -248,7 +246,15 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var sin = x
+    var fact = 1
+    while (sin > eps) {
+        fact += 2
+        sin *= (-sin) * x * x / (factorial(fact))
+    }
+    return sin
+}
 
 
 /**
