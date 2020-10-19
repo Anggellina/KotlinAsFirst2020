@@ -2,7 +2,6 @@
 
 package lesson1.task1
 
-import kotlinx.html.InputType
 import kotlin.math.*
 
 // Урок 1: простые функции
@@ -86,8 +85,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(deg: Int, min: Int, sec: Int): Double =
-    PI / 180 * (deg - (min * PI / 60 / 180) - (sec * PI / 3600 / 180))
+fun angleInRadian(deg: Int, min: Int, sec: Int): Double = PI / 180 * (deg + (min / 60) + (sec / 3600))
 
 /**
  * Тривиальная (1 балл)
