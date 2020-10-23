@@ -156,7 +156,7 @@ fun collatzSteps(x: Int): Int {
             n /= 2
         } else {
             z++
-            n = n + n + n + 1
+            n = 3 * n + 1
         }
     }
     return z
@@ -172,13 +172,13 @@ fun collatzSteps(x: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     var first = m
     var second = n
-    val multiplication = (first * second)
+    val nok = (first * second)
     while ((first != 0) && (second != 0)) {
         if (first > second) first %= second
         else second %= first
     }
     val count = first + second
-    return multiplication / count
+    return nok / count
 }
 
 /**
