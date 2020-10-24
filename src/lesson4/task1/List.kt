@@ -136,7 +136,7 @@ fun abs(v: List<Double>): Double {
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    if (list.size == 0) return 0.0
+    if (list.isEmpty()) return 0.0
     val sum = list.sum()
     return sum / list.size
 }
@@ -164,15 +164,15 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Double {
-    var c = 0.0
+fun times(a: List<Int>, b: List<Int>): Int {
+    var c = 0
     return if (a.size == b.size) {
         for (i in a.indices) {
             val multiplication = a[i] * b[i]
             c += multiplication
         }
         c
-    } else 0.0
+    } else 0
 }
 
 /**
