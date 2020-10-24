@@ -130,6 +130,7 @@ fun maxDivisor(n: Int): Int {
     return z
 }
 
+
 /**
  * Простая (2 балла)
  *
@@ -282,25 +283,16 @@ fun squareSequenceDigit(n: Int): Int {
     var num = 0
     var square = 0
     var z = 1
-    var t = 10
     while (enumerator < n) {
         num++
         square = num * num
-        z = 1
-        t = 10
-        while (square / t != 0) {
-            t *= 10
-            z++
-        }
+        z = digitNumber(square)
         enumerator += z
     }
-    enumerator -= z
-    t /= 10
-    var result = 1
+    var result = square % 10
     while (enumerator != n) {
-        result = square / t % 10
-        t /= 10
-        enumerator++
+        result = square / 10 % 10
+        enumerator--
     }
     return result
 }
