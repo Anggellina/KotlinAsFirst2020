@@ -140,11 +140,11 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val member = jumps.split(" ")
+    val members = jumps.split(" ")
     var max = -1
-    for (i in 1 until member.size step 2) {
-        val jump = member[i - 1].toInt()
-        if (member[i].contains("+") && (jump > max)) max = jump
+    for (i in 1 until members.size step 2) {
+        val jump = members[i - 1].toInt()
+        if (members[i].contains("+") && (jump > max)) max = jump
     }
     return max
 }
