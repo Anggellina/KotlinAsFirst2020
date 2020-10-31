@@ -114,7 +114,19 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val member = jumps.split(" ")
+    val notTheBest = Regex("""[^\d%-]""")
+    val best = Regex("""\d""")
+    var max = -1
+    for (i in member.indices) {
+        if (member[i].contains(notTheBest)) return -1
+        else {
+            if ((member[i].contains(best)) && (member[i].toInt() > max)) max = member[i].toInt()
+        }
+    }
+    return max
+}
 
 /**
  * Сложная (6 баллов)
@@ -127,7 +139,15 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val member = jumps.split(" ")
+    var max = -1
+    for (i in 1 until member.size step 2) {
+        val jump = member[i - 1].toInt()
+        if (member[i].contains("+") && (jump > max)) max = jump
+    }
+    return max
+}
 
 /**
  * Сложная (6 баллов)
@@ -162,7 +182,36 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val parts = description.split(";")
+    var n = 0.0
+    var z = ""
+    var m = 0.0
+    var r = ""
+    var t = 1
+    try {
+        for (part in parts) {
+            val nextparts = part.trim().split(" ")
+            for (nextpart in nextparts) {
+                if (t % 2 == 1) {
+                    r = nextpart
+                }
+                if (t % 2 == 0) {
+                    m = nextpart.toDouble()
+                    if (m > n) {
+                        n = m
+                        z = r
+                    }
+                }
+                t += 1
+                println(r)
+            }
+        }
+    } catch (e: NumberFormatException) {
+        z = ""
+    }
+    return z
+}
 
 /**
  * Сложная (6 баллов)
