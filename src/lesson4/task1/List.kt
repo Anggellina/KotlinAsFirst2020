@@ -166,14 +166,13 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Int>, b: List<Int>): Int {
     var c = 0
-    return if (a.size == b.size) {
-        for (i in a.indices) {
-            val multiplication = a[i] * b[i]
-            c += multiplication
-        }
-        c
-    } else 0
+    for (i in a.indices) {
+        val multiplication = a[i] * b[i]
+        c += multiplication
+    }
+    return c
 }
+
 
 /**
  * Средняя (3 балла)
