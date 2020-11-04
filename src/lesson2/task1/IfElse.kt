@@ -3,10 +3,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.PI
-import kotlin.math.max
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
 // Максимальное количество баллов = 6
@@ -105,10 +102,10 @@ fun timeForHalfWay(t1: Double, v1: Double, t2: Double, v2: Double, t3: Double, v
  */
 
 fun whichRookThreatens(kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2: Int, rookY2: Int): Int {
-    return if ((kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2)) 3
-    else if (kingX == rookX2 || kingY == rookY2) 2
-    else if (kingX == rookX1 || kingY == rookY1) 1
-    else 0
+    var i = 0
+    if ((kingX == rookX1) || (kingY == rookY1)) i += 1
+    if ((kingX == rookX2) || (kingY == rookY2)) i += 2
+    return i
 }
 
 
@@ -122,13 +119,14 @@ fun whichRookThreatens(kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2:
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
-fun rookOrBishopThreatens(kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int): Int =
-    when {
-        (((kingX != rookX) && (kingY != bishopX)) && ((kingX != rookX) && (kingY != bishopY))) -> 0
-        (((kingX == rookX) || (kingY == bishopX)) && ((kingX != rookX) && (kingY != bishopY))) -> 1
-        (((kingX != rookX) && (kingY != bishopX)) && ((kingX == rookX) || (kingY == bishopY))) -> 2
-        else -> 3
+fun rookOrBishopThreatens(kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int): Int {
+    return when {
+        (((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) == abs(bishopY - kingY))) -> 3
+        (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 2
+        (kingX == rookX) || (kingY == rookY) -> 1
+        else -> 0
     }
+}
 
 /**
  * Простая (2 балла)
@@ -148,13 +146,16 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
-    when {
-        (c > b || a > d) -> -1
-        (b == c || d == a) -> 0
-        (c < a && d < b) -> d - a
-        (a < c && b < d) -> b - c
-        (c <= a && b <= d) -> b - a
-        (a <= c && d <= b) -> d - c
-        else -> -2
-    }
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    return if ((a <= c) && (c < b) && (b <= d)) {
+        b - c
+    } else if ((a == d) || (b == c)) {
+        0
+    } else if ((c <= a) && (b <= d)) {
+        b - a
+    } else if ((a <= c) && (d <= b)) {
+        d - c
+    } else if ((c <= a) && (a < d) && (d <= b)) {
+        d - a
+    } else -1
+}
