@@ -4,6 +4,7 @@ package lesson3.task1
 
 import kotlin.math.abs
 import kotlin.math.ceil
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -126,12 +127,12 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var z = n / 2 + 1
-    for (i in n / 2 + 1 downTo 1) {
-        if (n % z == 0) break
-        else z -= 1
+    var max = n
+    for (i in 1..n) {
+        if (n % i == 0 && i < n)
+            max = i
     }
-    return z
+    return max
 }
 
 
@@ -177,7 +178,7 @@ fun collatzSteps(x: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     var first = m
     var second = n
-    val nok = (first * second)
+    val nok = first * second
     while ((first != 0) && (second != 0)) {
         if (first > second) first %= second
         else second %= first
@@ -252,13 +253,18 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var sin = x
-    var fact = 1
-    while (sin > eps) {
-        fact += 2
-        sin *= (-sin) * x * x / (factorial(fact))
+    var i = 0
+    val arg = x % (2 * Math.PI)
+    var f = arg
+    var t = arg
+    while (abs(t) >= eps) {
+        i++
+        t = arg.pow(i * 2.0 + 1) / factorial(i * 2 + 1)
+        if (i % 2 == 1) f -= t
+        else f += t
+
     }
-    return sin
+    return f
 }
 
 
@@ -283,20 +289,20 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var enumerator = 0
+    var i = 0
     var num = 0
     var square = 0
     var z = 1
-    while (enumerator < n) {
+    while (i < n) {
         num++
         square = num * num
         z = digitNumber(square)
-        enumerator += z
+        i += z
     }
     var result = square % 10
-    while (enumerator != n) {
+    while (i != n) {
         result = square / 10 % 10
-        enumerator--
+        i--
     }
     return result
 }
@@ -310,4 +316,15 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var i = 1
+    var k = 0
+    var m = 0
+    while (m < n) {
+        k = fib(i)
+        m += digitNumber(k)
+        i += 1
+    }
+    i = m - n
+    return (k / 10.0.pow(m - n).toInt()) % 10
+}
