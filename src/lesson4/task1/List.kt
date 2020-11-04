@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import lesson3.task1.minDivisor
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -195,11 +196,8 @@ fun polynom(p: List<Int>, x: Int): Int = TODO()
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    var sum = 0
-    val large = list.size - 1
-    for (i in 0..large) {
-        sum += list[i]
-        list[i] = sum
+    for (i in 1 until list.size) {
+        list[i] = list[i - 1] + list[i]
     }
     return list
 }
@@ -213,17 +211,10 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  */
 fun factorize(n: Int): List<Int> {
     var number = n
-    val result = mutableListOf<Int>()
-    while ((number % 2) == 0) {
-        result.add(2)
-        number /= 2
-    }
-    var i = 3
-    while (i <= number) {
-        if ((number % i) == 0) {
-            result.add(i)
-            number /= i
-        } else i += 2
+    var result = listOf<Int>()
+    while (number > 1) {
+        result += minDivisor(number)
+        number /= minDivisor(number)
     }
     return result
 }
@@ -248,18 +239,15 @@ fun factorizeToString(n: Int): String {
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    val result = mutableListOf<Int>()
-    if (n < base) result.add(n)
-    else {
-        var num = n
-        while (num / base >= base) {
-            result.add(0, num % base)
-            num /= base
-        }
-        result.add(0, num % base)
-        result.add(0, num / base)
+    var number = n
+    var result = mutableListOf<Int>()
+    var list: List<Int>
+    while (number > 0) {
+        list = listOf(number % base)
+        result = (list + result) as MutableList<Int>
+        number /= base
     }
-    return result
+return result
 }
 
 /**
