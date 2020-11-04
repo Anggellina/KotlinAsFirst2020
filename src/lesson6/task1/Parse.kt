@@ -115,15 +115,17 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val member = jumps.split(" ")
-    val notTheBest = Regex("""[^\d%-]""")
-    val best = Regex("""\d""")
     var max = -1
-    for (i in member.indices) {
-        if (member[i].contains(notTheBest)) return -1
-        else {
-            if ((member[i].contains(best)) && (member[i].toInt() > max)) max = member[i].toInt()
+    val parts = jumps.split(" ", "%", "-").toMutableList()
+    for (i in 0 until parts.size) {
+        parts.remove("")
+    }
+    try {
+        for (part in parts) {
+            if (part.toInt() > max) max = part.toInt()
         }
+    } catch (e: NumberFormatException) {
+        return -1
     }
     return max
 }
@@ -140,11 +142,18 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val members = jumps.split(" ")
     var max = -1
-    for (i in 1 until members.size step 2) {
-        val jump = members[i - 1].toInt()
-        if (members[i].contains("+") && (jump > max)) max = jump
+    val parts = jumps.split(" ")
+    val list: MutableList<String> = mutableListOf()
+    for (i in 1 until parts.size) {
+        if ('+' in parts[i]) list += parts[i - 1]
+    }
+    try {
+        for (element in list) {
+            if (element.toInt() > max) max = element.toInt()
+        }
+    } catch (e: NumberFormatException) {
+        return -1
     }
     return max
 }
@@ -183,34 +192,24 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val parts = description.split(";")
-    var n = 0.0
-    var z = ""
-    var m = 0.0
-    var r = ""
-    var t = 1
     try {
-        for (part in parts) {
-            val nextparts = part.trim().split(" ")
-            for (nextpart in nextparts) {
-                if (t % 2 == 1) {
-                    r = nextpart
-                }
-                if (t % 2 == 0) {
-                    m = nextpart.toDouble()
-                    if (m > n) {
-                        n = m
-                        z = r
-                    }
-                }
-                t += 1
-                println(r)
+        val members = description.split("; ")
+        var stringName = ""
+        var max = 0.0
+        for (element in members) {
+            val partOfMembers = element.split(" ")
+            if (partOfMembers[partOfMembers.size - 1].toDouble() >= max) {
+                max = partOfMembers[partOfMembers.size - 1].toDouble()
+                stringName = ""
+                for (j in 0..partOfMembers.size - 2) stringName += partOfMembers[j]
             }
         }
+        return stringName
+    } catch (e: IndexOutOfBoundsException) {
+        return ""
     } catch (e: NumberFormatException) {
-        z = ""
+        return ""
     }
-    return z
 }
 
 /**
