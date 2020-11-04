@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -109,11 +110,13 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var z = 2
-    while (n % z != 0) {
-        z += 1
+    val sqrtN = ceil(sqrt(n.toDouble()))
+    var a = 2
+    while (a <= sqrtN) {
+        if (n % a == 0) return a
+        else a += 1
     }
-    return z
+    return n
 }
 
 
@@ -123,9 +126,10 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var z = n - 1
-    while (n % z != 0) {
-        z -= 1
+    var z = n / 2 + 1
+    for (i in n / 2 + 1 downTo 1) {
+        if (n % z == 0) break
+        else z -= 1
     }
     return z
 }
