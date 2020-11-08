@@ -120,12 +120,11 @@ fun whichRookThreatens(kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2:
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int): Int {
-    return when {
-        (((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) == abs(bishopY - kingY))) -> 3
-        (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 2
-        (kingX == rookX) || (kingY == rookY) -> 1
-        else -> 0
-    }
+    var i = 0
+    if (((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) == abs(bishopY - kingY))) i += 3
+    if (abs(bishopX - kingX) == abs(bishopY - kingY)) i += 2
+    if ((kingX == rookX) || (kingY == rookY)) i += 1
+    return i
 }
 
 /**
@@ -147,15 +146,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return if ((a <= c) && (c < b) && (b <= d)) {
-        b - c
-    } else if ((a == d) || (b == c)) {
-        0
-    } else if ((c <= a) && (b <= d)) {
-        b - a
-    } else if ((a <= c) && (d <= b)) {
-        d - c
-    } else if ((c <= a) && (a < d) && (d <= b)) {
-        d - a
-    } else -1
+    return when {
+        ((a == d) || (b == c)) -> 0
+        ((a <= c) && (c < b) && (b <= d)) -> b - c
+        ((c <= a) && (b <= d)) -> b - a
+        ((a <= c) && (d <= b)) -> d - c
+        ((c <= a) && (a < d) && (d <= b)) -> d - a
+        else -> -1
+    }
 }
