@@ -120,11 +120,11 @@ fun whichRookThreatens(kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2:
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int): Int {
+    var z = 0
     var i = 0
-    if (((kingX == rookX) || (kingY == rookY)) && (abs(bishopX - kingX) == abs(bishopY - kingY))) i += 3
-    if (abs(bishopX - kingX) == abs(bishopY - kingY)) i += 2
-    if ((kingX == rookX) || (kingY == rookY)) i += 1
-    return i
+    if ((kingX == rookX) || (kingY == rookY)) z = 1
+    if (abs(kingX - bishopX) == abs(kingY - bishopY)) i = 2
+    return z + i
 }
 
 /**
