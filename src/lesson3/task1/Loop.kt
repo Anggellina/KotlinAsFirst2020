@@ -112,10 +112,8 @@ fun fib(n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     val sqrtN = ceil(sqrt(n.toDouble()))
-    var a = 2
     for (i in 2..sqrtN.toInt()) {
-        if (n % a == 0) return a
-        a += 1
+        if (n % i == 0) return i
     }
     return n
 }
