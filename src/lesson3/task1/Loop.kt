@@ -125,12 +125,12 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var max = n
-    for (i in 1..n) {
-        if (n % i == 0 && i < n)
-            max = i
+    for (i in n / 2 downTo 2) {
+        if (n % i == 0) {
+            return i
+        }
     }
-    return max
+    return 1
 }
 
 
@@ -153,19 +153,16 @@ fun maxDivisor(n: Int): Int {
 fun collatzSteps(x: Int): Int {
     var n = x
     var z = 0
-
     while (n != 1) {
+        z++
         if (n % 2 == 0) {
-            z++
             n /= 2
         } else {
-            z++
             n = 3 * n + 1
         }
     }
     return z
 }
-
 
 /**
  * Средняя (3 балла)
@@ -176,13 +173,12 @@ fun collatzSteps(x: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     var first = m
     var second = n
-    val nok = first * second
-    while ((first != 0) && (second != 0)) {
+    while (first != 0 && second != 0) {
         if (first > second) first %= second
         else second %= first
     }
     val count = first + second
-    return nok / count
+    return m * n / count
 }
 
 /**
@@ -289,20 +285,13 @@ fun cos(x: Double, eps: Double): Double = TODO()
 fun squareSequenceDigit(n: Int): Int {
     var i = 0
     var num = 0
-    var square = 0
-    var z = 1
+    var square = 1
     while (i < n) {
-        num++
+        num += 1
         square = num * num
-        z = digitNumber(square)
-        i += z
+        i += digitNumber(square)
     }
-    var result = square % 10
-    while (i != n) {
-        result = square / 10 % 10
-        i--
-    }
-    return result
+    return (square / 10.0.pow(i - n).toInt()) % 10
 }
 
 /**
