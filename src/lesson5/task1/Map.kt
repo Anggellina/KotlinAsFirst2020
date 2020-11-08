@@ -96,7 +96,12 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val build = mutableMapOf<Int, MutableList<String>>()
+    for ((name, grade) in grades)
+        build.getOrPut(grade) { mutableListOf() }.add(name)
+    return build
+}
 
 /**
  * Простая (2 балла)
@@ -108,7 +113,11 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    for ((i, n) in a)
+        if (n != b[i]) return false
+    return true
+}
 
 /**
  * Простая (2 балла)
@@ -166,7 +175,15 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val map = mutableMapOf<String, MutableList<Double>>()
+    for ((i, n) in stockPrices)
+        map.getOrPut(i) { mutableListOf() }.add(n)
+    val answer = mutableMapOf<String, Double>()
+    for ((i, n) in map)
+        answer[i] = n.sum() / n.size
+    return answer
+}
 
 /**
  * Средняя (4 балла)
@@ -208,7 +225,18 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    val extra = mutableSetOf<String>()
+    for (i in extra)
+        map[i] = 0
+    for (i in list)
+        map[i] = map.getOrPut(i) { 0 } + 1
+    val mapAnswer = mutableMapOf<String, Int>()
+    for ((n, m) in map)
+        if (m >= 2) mapAnswer[n] = m
+    return mapAnswer
+}
 
 /**
  * Средняя (3 балла)
@@ -277,7 +305,17 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    val map = mutableMapOf<Int, Int>()
+    for ((index, i) in list.withIndex()) {
+        if (map[number - i] != null) {
+            return if (index < map[number - i]!!)
+                Pair(index, map[number - i]!!)
+            else Pair(map[number - i]!!, index)
+        } else map[i] = index
+    }
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная (8 баллов)
