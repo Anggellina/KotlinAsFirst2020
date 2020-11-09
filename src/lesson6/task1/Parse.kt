@@ -116,16 +116,18 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  */
 fun bestLongJump(jumps: String): Int {
     var max = -1
-    val parts = jumps.split(" ", "%", "-").toMutableList()
-    for (i in 0 until parts.size) {
-        parts.remove("")
-    }
-    try {
-        for (part in parts) {
-            if (part.toInt() > max) max = part.toInt()
+    val list = listOf(
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '%', '-'
+    )
+    for (i in jumps) if (i !in list) return max
+    if (Regex("""\d""").find(jumps, 0) != null) {
+        var longJump = jumps.replace("%", "").replace("-", "")
+        while (longJump.contains("  ")) {
+            longJump = longJump.replace("  ", " ")
         }
-    } catch (e: NumberFormatException) {
-        return -1
+        val bestJump = longJump.split(" ")
+        for (part in bestJump)
+            if (part.toInt() > max) max = part.toInt()
     }
     return max
 }
@@ -143,17 +145,17 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     var max = -1
-    val parts = jumps.split(" ")
-    val list: MutableList<String> = mutableListOf()
-    for (i in 1 until parts.size) {
-        if ('+' in parts[i]) list += parts[i - 1]
-    }
-    try {
-        for (element in list) {
-            if (element.toInt() > max) max = element.toInt()
-        }
-    } catch (e: NumberFormatException) {
-        return -1
+    val list = listOf(
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '%', '-', '+'
+    )
+    val digits = mutableListOf<String>()
+    for (i in jumps) if (i !in list) return max
+    if (Regex("""\d""").find(jumps, 0) != null && Regex("""\+""").find(jumps, 0) != null) {
+        val highJump = jumps.replace("%", "").replace("-", "").split(" ")
+        for (i in highJump.indices)
+            if (highJump[i] == "+") digits.add(highJump[i - 1])
+        for (digit in digits)
+            if (digit.toInt() > max) max = digit.toInt()
     }
     return max
 }
@@ -202,24 +204,21 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    try {
-        val members = description.split("; ")
-        var stringName = ""
-        var max = 0.0
-        for (element in members) {
-            val partOfMembers = element.split("")
-            if (partOfMembers[partOfMembers.size - 1].toDouble() >= max) {
-                max = partOfMembers[partOfMembers.size - 1].toDouble()
-                stringName = ""
-                for (j in 0..partOfMembers.size - 2) stringName += partOfMembers[j]
+    val members = description.split("; ")
+    var max = -1.0
+    var maxIndex = ""
+    for (i in members) {
+        val partOfMembers = i.split(" ")
+        try {
+            if (partOfMembers[1].toDouble() > max) {
+                max = partOfMembers[1].toDouble()
+                maxIndex = partOfMembers[0]
             }
+        } catch (e: Exception) {
+            return ""
         }
-        return stringName
-    } catch (e: IndexOutOfBoundsException) {
-        return ""
-    } catch (e: NumberFormatException) {
-        return ""
     }
+    return maxIndex
 }
 
 /**
