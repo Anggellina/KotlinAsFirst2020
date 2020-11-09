@@ -212,11 +212,13 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     var number = n
     val result = mutableListOf<Int>()
-    var d = minDivisor(number)
-    while (number > 1) {
-        result += d
-        number /= d
-        d = minDivisor(number)
+    var d = 2
+    if (number == 1) result.add(number)
+    else while (number > 1) {
+        if (number % d == 0) {
+            result.add(d)
+            number /= d
+        } else d += 1
     }
     return result
 }
