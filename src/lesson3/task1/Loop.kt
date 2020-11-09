@@ -163,6 +163,7 @@ fun collatzSteps(x: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
+
 fun lcm(m: Int, n: Int): Int {
     var first = m
     var second = n
@@ -170,8 +171,7 @@ fun lcm(m: Int, n: Int): Int {
         if (first > second) first %= second
         else second %= first
     }
-    val count = first + second
-    return m * n / count
+    return m * n / (first + second)
 }
 
 /**
