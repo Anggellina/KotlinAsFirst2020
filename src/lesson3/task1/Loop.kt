@@ -171,7 +171,7 @@ fun lcm(m: Int, n: Int): Int {
         if (first > second) first %= second
         else second %= first
     }
-    return m * n / (first + second)
+    return (m / (first + second)) * n
 }
 
 /**
