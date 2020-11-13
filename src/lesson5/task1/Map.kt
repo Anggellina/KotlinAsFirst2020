@@ -176,13 +176,13 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    val map = mutableMapOf<String, MutableList<Double>>()
-    for ((i, n) in stockPrices)
-        map.getOrPut(i) { mutableListOf() }.add(n)
-    val answer = mutableMapOf<String, Double>()
-    for ((i, n) in map)
-        answer[i] = n.sum() / n.size
-    return answer
+    val map = mutableMapOf<String, Int>()
+    val result = mutableMapOf<String, Double>()
+    for ((i, n) in stockPrices) {
+        result[i] = ((result[i] ?: 0.0) * (map[i] ?: 0) + n) / ((map[i] ?: 0) + 1)
+        map[i] = 1 + map.getOrDefault(i, 0)
+    }
+    return result
 }
 
 /**
@@ -300,15 +300,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val map = mutableMapOf<Int, Int>()
-    var pair = Pair(-1, -1)
-    for (i in list.indices) {
-        map[list[i]] = i
-        if (map.containsKey(number - list[i]) && i != map[number - list[i]])
-            pair = Pair(map.getValue(number - list[i]), i)
-        print(pair)
-    }
-    return pair
+    for (one in list.indices)
+        for (two in one + 1 until list.size)
+            if ((list[one] + list[two]) == number)
+                return Pair(one, two)
+    return Pair(-1, -1)
 }
 
 /**
