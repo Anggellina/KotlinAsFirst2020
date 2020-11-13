@@ -213,12 +213,12 @@ fun factorize(n: Int): List<Int> {
     var number = n
     val result = mutableListOf<Int>()
     var d = 2
-    while (number > 1) {
-        while (number % d == 0) {
+    while (number != 1) {
+        if (number % d == 0) {
             result.add(d)
             number /= d
-        }
-        d++
+            d = 2
+        } else d++
     }
     return result
 }
@@ -265,13 +265,12 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    var result = StringBuilder()
-    val nums = convert(n, base)
-    for (i in nums.indices) {
-        result.append(
-            if (nums[i] > 9) (nums[i] - 10 + 'a'.toInt()).toChar().toString()
-            else nums[i].toString()
-        )
+    val num = convert(n, base)
+    val result = StringBuilder()
+    val number = ('a'..'z').toList()
+    for (i in num) {
+        if (i < 10) result.append(i)
+        else result.append(number[i - 10])
     }
     return result.toString()
 }
