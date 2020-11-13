@@ -213,11 +213,10 @@ fun factorize(n: Int): List<Int> {
     var number = n
     val result = mutableListOf<Int>()
     var d = 2
-    while (number != 1) {
+    while (number > 1) {
         if (number % d == 0) {
             result.add(d)
             number /= d
-            d = 2
         } else d++
     }
     return result
@@ -266,14 +265,14 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val num = convert(n, base)
-    val result = StringBuilder()
-    val number = ('a'..'z').toList()
+    var result = ""
     for (i in num) {
-        if (i < 10) result.append(i)
-        else result.append(number[i - 10])
+        result += if (i < 10) i
+        else ('a' + i - 10)
     }
-    return result.toString()
+    return result
 }
+
 
 /**
  * Средняя (3 балла)
