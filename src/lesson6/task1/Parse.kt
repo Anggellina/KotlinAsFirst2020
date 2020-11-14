@@ -116,18 +116,11 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  */
 fun bestLongJump(jumps: String): Int {
     var max = -1
-    val list = listOf(
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '%', '-'
-    )
-    for (i in jumps) if (i !in list) return max
-    if (Regex("""\d""").find(jumps, 0) != null) {
-        var longJump = jumps.replace("%", "").replace("-", "")
-        while (longJump.contains("  ")) {
-            longJump = longJump.replace("  ", " ")
-        }
-        val bestJump = longJump.split(" ")
-        for (part in bestJump)
-            if (part.toInt() > max) max = part.toInt()
+    val list = jumps.split(" ")
+    if (!jumps.matches(Regex("""[\d%\- ]*"""))) return -1
+    for (i in list) {
+        val a = i.toIntOrNull() ?: -1
+        if (a > max) max = a
     }
     return max
 }
@@ -144,18 +137,15 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
+    val list = jumps.split(" ")
     var max = -1
-    val list = listOf(
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '%', '-', '+'
-    )
-    val digits = mutableListOf<String>()
-    for (i in jumps) if (i !in list) return max
-    if (Regex("""\d""").find(jumps, 0) != null && Regex("""\+""").find(jumps, 0) != null) {
-        val highJump = jumps.replace("%", "").replace("-", "").split(" ")
-        for (i in highJump.indices)
-            if (highJump[i] == "+") digits.add(highJump[i - 1])
-        for (digit in digits)
-            if (digit.toInt() > max) max = digit.toInt()
+    var digits = -1
+    if (!jumps.matches(Regex("""[\d%+\- ]*"""))) return -1
+    for (i in list) {
+        when (i.toIntOrNull()) {
+            null -> if ('+' in i && digits > max) max = digits
+            else -> digits = i.toInt()
+        }
     }
     return max
 }
@@ -204,21 +194,21 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val members = description.split("; ")
-    var max = -1.0
-    var maxIndex = ""
-    for (i in members) {
-        val partOfMembers = i.split(" ")
-        try {
-            if (partOfMembers[1].toDouble() > max) {
-                max = partOfMembers[1].toDouble()
-                maxIndex = partOfMembers[0]
-            }
-        } catch (e: Exception) {
-            return ""
+    val members = description.split(" ", "; ")
+    var max = 0.0
+    var maxIndex = -1
+    if (members.size % 2 == 1) return ""
+    for (i in 1 until members.size step 2) {
+        if (members[i].isEmpty()) return ""
+        val a = members[i].toDoubleOrNull() ?: return ""
+        if (a < 0) return ""
+        if (a >= max) {
+            max = a
+            maxIndex = i
         }
     }
-    return maxIndex
+    return if (maxIndex > 0) members[maxIndex - 1]
+    else ""
 }
 
 /**
