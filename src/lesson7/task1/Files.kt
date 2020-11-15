@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.max
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -129,7 +130,19 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val result = mutableListOf<String>()
+    val lines = File(inputName).readLines()
+    val center = StringBuilder()
+    var i = 0
+    for (line in lines) {
+        i = max(i, line.trim().length)
+        result.add(line.trim())
+    }
+    for (line in result) {
+        val num = (i - line.length) / 2
+        center.append(" ".repeat(num) + line + '\n')
+    }
+    File(outputName).writeText(center.toString())
 }
 
 /**
@@ -298,7 +311,59 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    var i = 0
+    var b = 0
+    var s = 0
+    var input = 0
+    var output = 0
+    val result = StringBuilder("<html>\n<body>\n<p>\n")
+    for (lines in File(inputName).readLines()) {
+        if (lines.isEmpty() && input != 0) {
+            if (output == 0) {
+                result.append("\n</p>\n<p>\n")
+                output++
+                continue
+            } else continue
+        }
+        output = 0
+        for (row in lines.split(" ")) {
+            var html = row
+            var toHtml = row.length
+            while (toHtml > 0) {
+                if ("**" in html) {
+                    if (b % 2 == 0) {
+                        html = html.replaceFirst("**", "<b>")
+                        b++
+                    } else {
+                        html = html.replaceFirst("**", "</b>")
+                        b++
+                    }
+                } else if ("*" in html) {
+                    if (i % 2 == 0) {
+                        html = html.replaceFirst("*", "<i>")
+                        i++
+                    } else {
+                        html = html.replaceFirst("*", "</i>")
+                        i++
+                    }
+                } else if ("~~" in html) {
+                    if (s % 2 == 0) {
+                        html = html.replaceFirst("~~", "<s>")
+                        s++
+                    } else {
+                        html = html.replaceFirst("~~", "</s>")
+                        s++
+                    }
+                }
+                toHtml--
+            }
+            result.append("$html ")
+        }
+        input++
+        result.trim()
+    }
+    result.append("</p>\n</body>\n</html>")
+    File(outputName).writeText(result.toString())
 }
 
 /**
