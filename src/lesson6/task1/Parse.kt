@@ -115,14 +115,14 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    var max = -1
-    val list = jumps.split(" ").filter { it != "-" && it != "%" }
-    if (!jumps.matches(Regex("""[\d%\- ]*"""))) return -1
-    for (i in list) {
-        val a = i.toIntOrNull() ?: -1
-        if (a > max) max = a
+    var max = false
+    if (jumps.isBlank()) return -1
+    for (a in jumps) {
+        if (a != '-' && a != ' ' && a != '%' && !a.isDigit()) return -1
+        if (a.isDigit()) max = true
     }
-    return max
+    if (!max) return -1
+    return jumps.split(" ").filter { it[0].isDigit() }.map { it.toInt() }.max() ?: -1
 }
 
 /**
@@ -137,11 +137,12 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val list = jumps.split(" ")
+    val list = jumps.split(' ')
     var max = -1
-    for (i in 1 until list.size step 2) {
-        val a = list[i - 1].toInt()
-        if (list[i].contains("+") && (a > max)) max = a
+    for (i in 0 until list.size / 2) {
+        val a = list[i * 2].toInt()
+        val result = list[i * 2 + 1]
+        if (a > max && result.contains('+')) max = a
     }
     return max
 }
@@ -190,21 +191,20 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val members = description.split(" ", "; ")
-    var max = 0.0
-    var maxIndex = -1
-    if (members.size % 2 == 1) return ""
-    for (i in 1 until members.size step 2) {
-        if (members[i].isEmpty()) return ""
-        val a = members[i].toDoubleOrNull() ?: return ""
-        if (a < 0) return ""
-        if (a >= max) {
+    var max = ""
+    var maxIndex = -1.0
+    for (i in description.split("; ")) {
+        val members = i.split(" ")
+        if (members.size != 2 || i.contains(";")) return ""
+        val a = members[0]
+        val b = members[1].toDouble()
+
+        if (b > maxIndex) {
+            maxIndex = b
             max = a
-            maxIndex = i
         }
     }
-    return if (maxIndex > 0) members[maxIndex - 1]
-    else ""
+    return max
 }
 
 /**
