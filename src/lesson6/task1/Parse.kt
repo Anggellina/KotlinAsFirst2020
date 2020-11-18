@@ -192,15 +192,15 @@ fun firstDuplicateIndex(str: String): Int {
  */
 fun mostExpensive(description: String): String {
     var max = ""
-    var maxIndex = -1.0
+    var index = -1.0
     for (i in description.split("; ")) {
         val members = i.split(" ")
         if (members.size != 2 || i.contains(";")) return ""
         val a = members[0]
         val b = members[1].toDouble()
 
-        if (b > maxIndex) {
-            maxIndex = b
+        if (b > index) {
+            index = b
             max = a
         }
     }
