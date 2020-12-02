@@ -115,14 +115,15 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    var max = false
-    if (jumps.isBlank()) return -1
-    for (a in jumps) {
-        if (a != '-' && a != ' ' && a != '%' && !a.isDigit()) return -1
-        if (a.isDigit()) max = true
+    val list = listOf(' ', '%', '-')
+    val line = jumps.split(" ")
+    var max = -1
+    if (jumps.all { !it.isDigit() } || jumps.any { it !in list && !it.isDigit() }) return max
+    for (i in line) {
+        if (i.toIntOrNull() != null && i.toInt() > max)
+            max = i.toInt()
     }
-    if (!max) return -1
-    return jumps.split(" ").filter { it[0].isDigit() }.map { it.toInt() }.max() ?: -1
+    return max
 }
 
 /**
@@ -137,12 +138,13 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val list = jumps.split(' ')
+    val list = jumps.split(" ")
     var max = -1
-    for (i in 0 until list.size / 2) {
-        val a = list[i * 2].toInt()
-        val result = list[i * 2 + 1]
-        if (a > max && result.contains('+')) max = a
+    for (i in 1 until list.size step 2){
+        val a = list[i]
+        val b = list[i - 1].toIntOrNull()
+        if ((b != null) && ('+' in a) && (max < b))
+            max = b
     }
     return max
 }
