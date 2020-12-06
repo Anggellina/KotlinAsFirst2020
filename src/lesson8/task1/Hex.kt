@@ -71,6 +71,20 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      * Вернуть true, если заданная точка находится внутри или на границе шестиугольника
      */
     fun contains(point: HexPoint): Boolean = center.distance(point) <= radius
+
+    fun getRing(): Collection<HexPoint> {
+        val result = mutableSetOf<HexPoint>()
+        var point = center.move(Direction.DOWN_LEFT, radius)
+        if (radius == 0) return setOf(center)
+        for (direction in Direction.values()) {
+            if (direction == Direction.INCORRECT) break
+            for (i in 0 until radius) {
+                point = point.move(direction, 1)
+                result.add(point)
+            }
+        }
+        return result
+    }
 }
 
 /**
@@ -280,36 +294,60 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
  *
  * Пример: 13, 32, 45, 18 -- шестиугольник радиусом 3 (с центром, например, в 15)
  */
-fun minContainingHexagon(vararg points: HexPoint): Hexagon {
-    require(points.isNotEmpty())
-    var result: Hexagon? = null
-    for (point in points) {
-        var center = point
-        val i = mutableListOf(center)
-        var radius = 0
-        val allTheWay = points.toMutableSet()
-        allTheWay.remove(center)
-        while (allTheWay.isNotEmpty()) {
-            val new = allTheWay.maxByOrNull { it.distance(center) }!!
-            if (new.distance(center) > radius) {
-                for (newCenter in pathBetweenHexes(center, new)) {
-                    radius = i.map { it.distance(newCenter) }.maxOrNull()!!
-                    if (newCenter.distance(new) <= radius) {
-                        i.add(new)
-                        center = newCenter
-                        break
-                    }
-                }
-            }
-            i.add(new)
-            allTheWay.remove(new)
-        }
-        if (result == null || radius < result.radius) {
-            result = Hexagon(center, radius)
-        }
+fun minContainingHexagon(vararg pts: HexPoint): Hexagon {
+    require(pts.isNotEmpty())
+    if (pts.size == 1) return Hexagon(pts.first(), 0)
+    val point = pts.toSet()
+    val allTheWay = pts.toList().toTypedArray()
+    var radius = 1
+    var end = maxRadius(allTheWay, point)
+    while (true) {
+        val (min, max, hexagon) = findRadius(radius, end, allTheWay, point)
+        if (min == max)
+            return hexagon
+        radius = min - 1
+        end = max
     }
-    return result!!
 }
 
+fun findRadius(
+    startRadius: Int, endRadius: Int, pointsArray: Array<HexPoint>, points: Set<HexPoint>
+): Triple<Int, Int, Hexagon> {
+    var min = startRadius
+    for (radius in startRadius..endRadius step max(1, (endRadius - startRadius) / 10)) {
+        val j = hexagonIncludePoints(pointsArray, points, radius)
+        if (j != null) return Triple(min, radius, j)
+        min = radius + 1
+    }
+    return Triple(-1, -1, Hexagon(HexPoint(-1, -1), -1))
+}
 
+fun maxRadius(pointsArray: Array<HexPoint>, points: Set<HexPoint>): Int {
+    var radius = 1
+    while (true) {
+        if (hexagonIncludePoints(pointsArray, points, radius) != null) {
+            return radius
+        }
+        radius += 500
+    }
+}
 
+fun hexagonIncludePoints(pointsArray: Array<HexPoint>, points: Set<HexPoint>, r: Int): Hexagon? {
+    val set = findIncreaseHexagonPoints(*pointsArray, radius = r)
+    for (p in set) {
+        val hexagon = Hexagon(p, r)
+        if (points.all { hexagon.contains(it) }) {
+            return hexagon
+        }
+    }
+    return null
+}
+
+fun findIncreaseHexagonPoints(vararg centers: HexPoint, radius: Int): Set<HexPoint> {
+    val alliance = mutableSetOf<HexPoint>()
+    for (center in centers) {
+        val hexagonSet = Hexagon(center, radius).getRing()
+        alliance.addAll(hexagonSet)
+    }
+    return alliance
+}
