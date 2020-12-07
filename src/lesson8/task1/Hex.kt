@@ -332,6 +332,15 @@ fun maxRadius(pointsArray: Array<HexPoint>, points: Set<HexPoint>): Int {
     }
 }
 
+fun findIncreaseHexagonPoints(vararg centers: HexPoint, radius: Int): Set<HexPoint> {
+    val alliance = mutableSetOf<HexPoint>()
+    for (center in centers) {
+        val hexagonSet = Hexagon(center, radius).getRing()
+        alliance.addAll(hexagonSet)
+    }
+    return alliance
+}
+
 fun hexagonIncludePoints(pointsArray: Array<HexPoint>, points: Set<HexPoint>, r: Int): Hexagon? {
     val set = findIncreaseHexagonPoints(*pointsArray, radius = r)
     for (p in set) {
@@ -341,13 +350,4 @@ fun hexagonIncludePoints(pointsArray: Array<HexPoint>, points: Set<HexPoint>, r:
         }
     }
     return null
-}
-
-fun findIncreaseHexagonPoints(vararg centers: HexPoint, radius: Int): Set<HexPoint> {
-    val alliance = mutableSetOf<HexPoint>()
-    for (center in centers) {
-        val hexagonSet = Hexagon(center, radius).getRing()
-        alliance.addAll(hexagonSet)
-    }
-    return alliance
 }
