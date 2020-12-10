@@ -3,7 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import kotlin.math.max
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -78,22 +77,19 @@ fun deleteMarked(inputName: String, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
-    val count = File(inputName).bufferedReader().readLines()
-    for (i in substrings) map[i] = 0
-    for (StringList in map.keys) {
-        for (File in count) {
-            var num = 0
-            while (num != File.length) {
-                val found = File.indexOf(StringList, num, true)
-                if (found == -1) break
-                num = found + 1
-                map[StringList] = map[StringList]!! + 1
-            }
+    val lines = File(inputName).readText().toLowerCase()
+    for (i in substrings) {
+        val symbols = "-().^+[]"
+        var z = i.toLowerCase()
+        for (symbol in symbols) {
+            z = z.replace(symbol.toString(), """\""" + symbol)
         }
+        val matchResult = Regex(pattern = "(?=$z)").findAll(lines)
+        val result = matchResult.map { it.value }.count()
+        map[i] = result
     }
     return map
 }
-
 
 /**
  * Средняя (12 баллов)
@@ -132,14 +128,19 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val result = File(outputName).bufferedWriter()
     val lines = File(inputName).readLines()
-    var i = ""
-    for (line in lines)
-        if (line.trim().length > i.length)
-            i = line.trim()
+    var i = -1
     for (line in lines) {
-        val center = StringBuilder(line.trim())
-        repeat((i.length - center.length) / 2) { center.insert(0, " ") }
-        result.write(center.toString())
+        val centerLine = line.trim()
+        val centerLength = centerLine.length
+        if (centerLength > i) {
+            i = centerLength
+        }
+    }
+    for (line in lines) {
+        val lengthLine = line.trim().length
+        val a = (i - lengthLine) / 2
+        val b = line.trim().padStart(lengthLine + a)
+        result.write(b)
         result.newLine()
     }
     result.close()
