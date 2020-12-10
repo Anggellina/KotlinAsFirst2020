@@ -311,59 +311,61 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    var i = 0
-    var b = 0
-    var s = 0
-    var input = 0
-    var output = 0
-    val result = StringBuilder("<html>\n<body>\n<p>\n")
-    for (lines in File(inputName).readLines()) {
-        if (lines.isEmpty() && input != 0) {
-            if (output == 0) {
-                result.append("\n</p>\n<p>\n")
-                output++
-                continue
-            } else continue
-        }
-        output = 0
-        for (row in lines.split(" ")) {
-            var html = row
-            var toHtml = row.length
-            while (toHtml > 0) {
-                if ("**" in html) {
-                    if (b % 2 == 0) {
-                        html = html.replaceFirst("**", "<b>")
-                        b++
-                    } else {
-                        html = html.replaceFirst("**", "</b>")
-                        b++
-                    }
-                } else if ("*" in html) {
-                    if (i % 2 == 0) {
-                        html = html.replaceFirst("*", "<i>")
-                        i++
-                    } else {
-                        html = html.replaceFirst("*", "</i>")
-                        i++
-                    }
-                } else if ("~~" in html) {
-                    if (s % 2 == 0) {
-                        html = html.replaceFirst("~~", "<s>")
-                        s++
-                    } else {
-                        html = html.replaceFirst("~~", "</s>")
-                        s++
+    val markdown = File(outputName).bufferedWriter()
+    markdown.write("<html>\n<body>\n<p>\n")
+    val file = File(inputName).readLines()
+    val htmlSimple = mutableListOf<String>()
+    for ((i, line) in file.withIndex()) {
+        if (line.isEmpty() && i != 0 && file[i - 1].isNotEmpty()
+            && i != file.size - 1
+        )
+            markdown.write("</p>\n<p>\n")
+        var z = 0
+        while (z < line.length) {
+            when (line[z]) {
+                '*' -> {
+                    when {
+                        z + 1 < line.length && line[z + 1] == '*' -> {
+                            if (htmlSimple.isEmpty() || htmlSimple.last() != "**") {
+                                markdown.write("<b>")
+                                htmlSimple.add("**")
+                            } else {
+                                markdown.write("</b>")
+                                htmlSimple.remove(htmlSimple.last())
+                            }
+                            z += 2
+                        }
+                        else -> {
+                            if (htmlSimple.isEmpty() || htmlSimple.last() != "*") {
+                                markdown.write("<i>")
+                                htmlSimple.add("*")
+                            } else {
+                                markdown.write("</i>")
+                                htmlSimple.remove(htmlSimple.last())
+                            }
+                            z++
+                        }
                     }
                 }
-                toHtml--
+                '~' -> {
+                    if (htmlSimple.isEmpty() || htmlSimple.last() != "~~") {
+                        markdown.write("<s>")
+                        htmlSimple.add("~~")
+                    } else {
+                        markdown.write("</s>")
+                        htmlSimple.remove(htmlSimple.last())
+                    }
+                    z += 2
+                }
+                else -> {
+                    markdown.write(line[z].toString())
+                    z++
+                }
             }
-            result.append("$html ")
         }
-        input++
-        result.trim()
     }
-    result.append("</p>\n</body>\n</html>")
-    File(outputName).writeText(result.toString())
+    markdown.write("</p>\n</body>\n</html>")
+    markdown.close()
 }
 
 /**
