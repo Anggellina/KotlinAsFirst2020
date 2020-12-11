@@ -10,6 +10,7 @@ package lesson9.task1
  */
 data class Cell(val row: Int, val column: Int)
 
+
 /**
  * Интерфейс, описывающий возможности матрицы. E = тип элемента матрицы
  */
