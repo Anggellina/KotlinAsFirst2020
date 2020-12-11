@@ -49,6 +49,25 @@ class Graph {
         return -1
     }
 
+    fun findPath(start: String, finish: String) = findPath(this[start], this[finish])
+
+    private fun findPath(start: Vertex, finish: Vertex): List<String> {
+        val queue = ArrayDeque<Vertex>()
+        queue.add(start)
+        val i = mutableMapOf(start to listOf(start.name))
+        while (queue.isNotEmpty()) {
+            val after = queue.poll()
+            val path = i[after]!!
+            if (after == finish) return path
+            for (neighbor in after.neighbors) {
+                if (neighbor in i) continue
+                i[neighbor] = path + neighbor.name
+                queue.add(neighbor)
+            }
+        }
+        return listOf()
+    }
+
     /**
      * Пример
      *
