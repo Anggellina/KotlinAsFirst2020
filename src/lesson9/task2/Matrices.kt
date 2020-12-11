@@ -2,8 +2,12 @@
 
 package lesson9.task2
 
+import lesson9.task1.Cell
 import lesson9.task1.Matrix
+import lesson9.task1.MatrixImpl
 import lesson9.task1.createMatrix
+import java.util.*
+import kotlin.math.abs
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -216,7 +220,22 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
+    for (row in 0..lock.height - key.height)
+        for (pillar in 0..lock.width - key.width) {
+            var source = false
+            for (i in 0 until key.height) {
+                for (j in 0 until key.width)
+                    if (lock[row + i, pillar + j] == key[i, j]) {
+                        source = true
+                        break
+                    }
+                if (source) break
+            }
+            if (!source) return Triple(true, row, pillar)
+        }
+    return Triple(false, 0, 0)
+}
 
 /**
  * Сложная (8 баллов)
@@ -245,7 +264,20 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    check(matrix.height == 4 && matrix.width == 4)
+    val result = createMatrix(4, 4, 0)
+    for (i in 0..3) for (j in 0..3) result[i, j] = matrix[i, j]
+    for (move in moves) {
+        check(move in 1..15)
+        val i = result.cordsMovingTitle(0)
+        val j = result.cordsMovingTitle(move)
+        check(i.neighbour(j))
+        result[i] = move
+        result[j] = 0
+    }
+    return result
+}
 
 /**
  * Очень сложная (32 балла)
