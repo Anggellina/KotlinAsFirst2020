@@ -2,6 +2,8 @@
 
 package lesson8.task2
 
+import lesson8.task3.Graph
+
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
@@ -32,7 +34,11 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square =
+    if (notation.length == 2 && notation[0] in 'a'..'h' && notation[1].isDigit()) Square(
+        notation[0] - 'a' + 1,
+        notation[1] - '0'
+    ) else throw IllegalArgumentException()
 
 /**
  * Простая (2 балла)
@@ -203,4 +209,24 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+    val graph = Graph()
+    val x = "${start.column}, ${start.row}"
+    val y = "${end.column}, ${end.row}"
+    for (i in 1..8) {
+        for (j in 1..8) {
+            graph.addVertex("$i, $j")
+        }
+    }
+    for (i in 1..8) {
+        for (j in 1..8) {
+            for (k in 0..7) {
+                val x = (k % 2 + 1) * -1 * ((k / 4) * 2 - 1)
+                val y = ((k + 1) % 2 + 1) * (-1) * (((k % 4) / 2) * 2 - 1)
+                if (Square(i + x, j + y).inside()) graph.connect("$i, $j", "${i + x}, ${j + y}")
+            }
+        }
+    }
+    val result = graph.findPath(x, y)
+    return result.map { Square(it.first().toString().toInt(), it.last().toString().toInt()) }
+}
