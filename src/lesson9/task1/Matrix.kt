@@ -2,13 +2,19 @@
 
 package lesson9.task1
 
+import lesson1.task1.sqr
+import java.lang.Math.sqrt
+
 // Урок 9: проектирование классов
 // Максимальное количество баллов = 40 (без очень трудных задач = 15)
 
 /**
  * Ячейка матрицы: row = ряд, column = колонка
  */
-data class Cell(val row: Int, val column: Int)
+data class Cell(val row: Int, val column: Int) {
+    fun neighbour(other: Cell): Boolean =
+        row - 1 == other.row || row + 1 == other.row || column - 1 == other.column || column + 1 == other.column
+}
 
 
 /**
@@ -36,6 +42,14 @@ interface Matrix<E> {
     operator fun set(row: Int, column: Int, value: E)
 
     operator fun set(cell: Cell, value: E)
+
+    infix fun cordsMovingTitle(element: E): Cell {
+        for (i in 0 until height) {
+            for (j in 0 until width)
+                if (this[i, j] == element) return Cell(i, j)
+        }
+        return Cell(-1, -1)
+    }
 }
 
 /**
