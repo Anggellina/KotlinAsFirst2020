@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.max
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -51,6 +52,47 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
         }
     }
     writer.close()
+}
+
+
+// for the task printDivisionProcess
+fun oneToList(x: Int): List<Int> {
+    val result = mutableListOf<Int>()
+    val list = x.toString().toList()
+    for (i in list) {
+        result.add(i.toString().toInt())
+    }
+    return result
+}
+
+fun firstSegment(x: Int, y: Int): Int {
+    val list = oneToList(x)
+    var a = 0
+    for (i in list) {
+        a = a * 10 + i
+        if (a / y > 0) {
+            return a
+        }
+    }
+    return a
+}
+
+fun numberLength(x: Int?): Int = x?.toString()?.length ?: 0
+
+fun segmentationList(x: Int, y: Int): List<Pair<Int, Int>> {
+    val list = mutableListOf<Pair<Int, Int>>()
+    val numberList = oneToList(x)
+    val one = firstSegment(x, y)
+    var i = numberLength(one)
+    list.add(one to (one - one % y))
+    var a = list.last().first - list.last().second
+    while (i != numberLength(x)) {
+        a = a * 10 + numberList[i]
+        list.add(a to (a - a % y))
+        a %= y
+        i++
+    }
+    return list
 }
 
 /**
@@ -565,6 +607,40 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val list = segmentationList(lhv, rhv)
+    var divider = list[0].first
+    var subtrahend = list[0].second
+    var gap = if (numberLength(divider) == numberLength(subtrahend)) 1 else 0
+    var maxLength = max(numberLength(divider), numberLength(subtrahend) + 1)
+    var result = divider - subtrahend
+    File(outputName).bufferedWriter().use {
+        it.write(" ".repeat(gap) + "$lhv | $rhv\n")
+        it.write(
+            " ".repeat(maxLength - numberLength(subtrahend) - 1) + "-" + subtrahend +
+                    " ".repeat(numberLength(lhv) + 3 + gap - maxLength) + lhv / rhv
+        )
+        it.newLine()
+        it.write("-".repeat(maxLength))
+        it.newLine()
+        gap = maxLength
+        for (i in 1 until list.size) {
+            gap++
+            divider = list[i].first
+            subtrahend = list[i].second
+            maxLength = max(numberLength(divider), numberLength(subtrahend) + 1)
+            if (result == 0) {
+                it.write(" ".repeat(gap - numberLength(divider) - 1) + "0" + divider)
+            } else {
+                it.write(" ".repeat(gap - numberLength(divider)) + divider)
+            }
+            it.newLine()
+            it.write(" ".repeat(gap - numberLength(subtrahend) - 1) + "-" + subtrahend)
+            it.newLine()
+            it.write(" ".repeat(gap - maxLength) + "-".repeat(maxLength))
+            it.newLine()
+            result = divider - subtrahend
+        }
+        it.write(" ".repeat(gap - numberLength(lhv % rhv)) + lhv % rhv)
+        it.close()
+    }
 }
-
